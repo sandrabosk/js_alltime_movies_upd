@@ -1,6 +1,79 @@
 /* eslint no-restricted-globals: 'off' */
 
+ // Iteration 1: All rates average
+  // Get the average of all rates with 2 decimals
+  function ratesAverage (movies) {
+    let rateSum = movies.reduce((sum, oneMovie) => sum + Number(oneMovie.rate), 0);
+  
+    let result = rateSum / movies.length;
+    return Number(Math.round(result * 100) / 100);
+  }
 
+// Iteration 2: Drama movies
+  // Get the average of Drama Movies
+  function dramaOnly (movies) {
+    let dramas = movies.filter(oneMovie => oneMovie.genre.includes("Drama"));
+    return dramas;
+  }
+
+  function dramaMoviesRate (movies) {
+    let dramas = dramaOnly(movies);
+    if (dramas.length === 0) {
+      return;
+    }
+    return ratesAverage(dramas);
+  }  
+
+
+ // Iteration 3: Ordering by duration
+  // Order by time duration, in growing order
+  function orderByDuration (movies) {
+    movies.sort((movieA, movieB) => {
+      let result = movieA.duration - movieB.duration;
+      if (result !== 0) {
+        return result;
+      }
+  
+      if (movieA.title < movieB.title) {
+        return -1;
+      }
+  
+      if (movieA.title > movieB.title) {
+        return 1;
+      }
+      return 0;
+    });
+
+    return movies;
+  }
+
+ // Iteration 4: Steven Spielberg. The best?
+  // How many movies did STEVEN SPIELBERG
+  function howManyMovies (movies) {
+    if (movies.length === 0) {
+      return;
+    }
+  
+    let spielbergFilms = movies.filter(oneMovie => oneMovie.director === "Steven Spielberg");
+  
+    let dramas = dramaOnly(spielbergFilms);
+  
+    return `Steven Spielberg directed ${dramas.length} drama movies!`;
+  }
+
+ // Iteration 5: Alphabetic Order
+  // Order by title and print the first 20 titles
+  function orderAlphabetically (movies) {
+    let sortedTitles = movies
+        .map(oneMovie => oneMovie.title)
+        .sort()
+        .slice(0, 20)
+      ;
+  
+    return sortedTitles;
+  }
+
+// Iteration 6: Time Format
 // Turn duration of the movies from hours to minutes
 // "2h 33min" -> 153
 // "2h"       -> 120
@@ -56,78 +129,7 @@ function convertHours (hourString) {
     return newCentArray;
   }
   
-  
-  // Get the average of all rates with 2 decimals
-  function ratesAverage (movies) {
-    let rateSum = movies.reduce((sum, oneMovie) => sum + Number(oneMovie.rate), 0);
-  
-    let result = rateSum / movies.length;
-    return Number(Math.round(result * 100) / 100);
-  }
-  
-  
-  // Get the average of Drama Movies
-  function dramaOnly (movies) {
-    let dramas = movies.filter(oneMovie => oneMovie.genre.includes("Drama"));
-    return dramas;
-  }
-
-  function dramaMoviesRate (movies) {
-    let dramas = dramaOnly(movies);
-    if (dramas.length === 0) {
-      return;
-    }
-    return ratesAverage(dramas);
-  }  
-  
-  // Order by time duration, in growing order
-  function orderByDuration (movies) {
-    movies.sort((movieA, movieB) => {
-      let result = movieA.duration - movieB.duration;
-      if (result !== 0) {
-        return result;
-      }
-  
-      if (movieA.title < movieB.title) {
-        return -1;
-      }
-  
-      if (movieA.title > movieB.title) {
-        return 1;
-      }
-      return 0;
-    });
-
-    return movies;
-  }
-  
-  
-  // How many movies did STEVEN SPIELBERG
-  function howManyMovies (movies) {
-    if (movies.length === 0) {
-      return;
-    }
-  
-    let spielbergFilms = movies.filter(oneMovie => oneMovie.director === "Steven Spielberg");
-  
-    let dramas = dramaOnly(spielbergFilms);
-  
-    return `Steven Spielberg directed ${dramas.length} drama movies!`;
-  }
-  
-  
-  // Order by title and print the first 20 titles
-  function orderAlphabetically (movies) {
-    let sortedTitles = movies
-        .map(oneMovie => oneMovie.title)
-        .sort()
-        .slice(0, 20)
-      ;
-  
-    return sortedTitles;
-  }
-  
-  
+// BONUS Iteration: Best yearly rate average
   // Best yearly rate average
   function bestYearAvg (movies) {
     if (movies.length === 0) {
