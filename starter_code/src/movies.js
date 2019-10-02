@@ -1,4 +1,6 @@
 /* eslint no-restricted-globals: 'off' */
+
+
 // Turn duration of the movies from hours to minutes
 // "2h 33min" -> 153
 // "2h"       -> 120
@@ -7,7 +9,7 @@
 // "2h"
 function convertHours (hourString) {
     // ["2", ""]
-    var calculateHour = hourString.split("h");
+    let calculateHour = hourString.split("h");
     return calculateHour[0] * 60;
     // "2" * 60
     // 120
@@ -16,32 +18,31 @@ function convertHours (hourString) {
   // "33min"
   function convertMinutes (minuteString) {
     // ["33", ""]
-    var calculateMinutes = minuteString.split("min");
+    let calculateMinutes = minuteString.split("min");
     return Number(calculateMinutes[0]);
+    // return +(calculateMinutes[0]); // this is alternative fancier way
     // 33
   }
   
   function convertDuration (duration) {
-    var timePieces = duration.split(" ");
+    let timePieces = duration.split(" ");
     // ["2h", "33min"]
     // ["2h"]
     // ["33min"]
   
-    var minutes =
-      timePieces.reduce(function (sum, onePiece) {
+    let minutes = timePieces.reduce((sum, onePiece) => {
         if (onePiece.includes("h")) {
           return sum + convertHours(onePiece);
         }
         return sum + convertMinutes(onePiece);
       }, 0);
-  
+
     return minutes;
   }
   
   function turnHoursToMinutes (movies) {
-    var newCentArray =
-      movies.map(function (oneMovie) {
-        var newMovie = {};
+    let newCentArray = movies.map(oneMovie => {
+        let newMovie = {};
         newMovie.title = oneMovie.title;
         newMovie.year = oneMovie.year;
         newMovie.director = oneMovie.director;
@@ -58,40 +59,31 @@ function convertHours (hourString) {
   
   // Get the average of all rates with 2 decimals
   function ratesAverage (movies) {
-    var rateSum =
-      movies.reduce(function (sum, oneMovie) {
-        return sum + oneMovie.rate;
-      }, 0);
+    let rateSum = movies.reduce((sum, oneMovie) => sum + Number(oneMovie.rate), 0);
   
-    var result = rateSum / movies.length;
-    return Math.round(result * 100) / 100;
+    let result = rateSum / movies.length;
+    return Number(Math.round(result * 100) / 100);
   }
   
   
   // Get the average of Drama Movies
   function dramaOnly (movies) {
-    var dramas =
-      movies.filter(function (oneMovie) {
-        return oneMovie.genre.includes("Drama");
-      });
-  
+    let dramas = movies.filter(oneMovie => oneMovie.genre.includes("Drama"));
     return dramas;
   }
+
   function dramaMoviesRate (movies) {
-    var dramas = dramaOnly(movies);
-  
+    let dramas = dramaOnly(movies);
     if (dramas.length === 0) {
       return;
     }
-  
     return ratesAverage(dramas);
-  }
-  
+  }  
   
   // Order by time duration, in growing order
   function orderByDuration (movies) {
-    movies.sort(function (movieA, movieB) {
-      var result = movieA.duration - movieB.duration;
+    movies.sort((movieA, movieB) => {
+      let result = movieA.duration - movieB.duration;
       if (result !== 0) {
         return result;
       }
@@ -103,10 +95,9 @@ function convertHours (hourString) {
       if (movieA.title > movieB.title) {
         return 1;
       }
-  
       return 0;
     });
-  
+
     return movies;
   }
   
@@ -117,24 +108,18 @@ function convertHours (hourString) {
       return;
     }
   
-    var spielbergFilms =
-      movies.filter(function (oneMovie) {
-        return oneMovie.director === "Steven Spielberg";
-      });
+    let spielbergFilms = movies.filter(oneMovie => oneMovie.director === "Steven Spielberg");
   
-    var dramas = dramaOnly(spielbergFilms);
+    let dramas = dramaOnly(spielbergFilms);
   
-    return "Steven Spielberg directed " + dramas.length + " drama movies!";
+    return `Steven Spielberg directed ${dramas.length} drama movies!`;
   }
   
   
   // Order by title and print the first 20 titles
   function orderAlphabetically (movies) {
-    var sortedTitles =
-      movies
-        .map(function (oneMovie) {
-          return oneMovie.title;
-        })
+    let sortedTitles = movies
+        .map(oneMovie => oneMovie.title)
         .sort()
         .slice(0, 20)
       ;
@@ -149,8 +134,8 @@ function convertHours (hourString) {
       return;
     }
   
-    var movieYears = {};
-    movies.forEach(function (oneMovie) {
+    let movieYears = {};
+    movies.forEach(oneMovie => {
       if (!movieYears[oneMovie.year]) {
         movieYears[oneMovie.year] = [];
       }
@@ -158,20 +143,20 @@ function convertHours (hourString) {
       movieYears[oneMovie.year].push(oneMovie);
     });
   
-    var winner =
-      Object.keys(movieYears)
-        .map(function (oneYear) {
+    let winner = 
+        Object.keys(movieYears)
+        .map(oneYear => {
           return {
             average: ratesAverage(movieYears[oneYear]),
             year: oneYear
           };
         })
-        .reduce(function (currentBest, yearInfo) {
+        .reduce((currentBest, yearInfo) => {
           if (yearInfo.average > currentBest.average) {
             return yearInfo;
           }
           return currentBest;
         });
   
-    return "The best year was " + winner.year + " with an average rate of " + winner.average;
+    return `The best year was ${winner.year} with an average rate of ${winner.average}`;
   }
